@@ -27,7 +27,8 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<Job> findAllJobs() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getForObject("http://localhost:8081/api/public/company/1", Company.class);
+        Company company = restTemplate.getForObject("http://localhost:8081/api/public/company/1", Company.class);
+        System.out.println(company + "Company Details");
         List<Job> jobs = jobRepository.findAll();
         return jobs;
     }

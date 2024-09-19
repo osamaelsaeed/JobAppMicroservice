@@ -4,12 +4,15 @@ package com.job_ms.job_ms.job.jobServiceImpl;
 import com.job_ms.job_ms.job.Job;
 import com.job_ms.job_ms.job.JobRepository;
 import com.job_ms.job_ms.job.JobService;
+import com.job_ms.job_ms.job.dto.JobWithCompanyDTO;
 import com.job_ms.job_ms.job.external.Company;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class JobServiceImpl implements JobService {
@@ -25,12 +28,20 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> findAllJobs() {
-        RestTemplate restTemplate = new RestTemplate();
-        Company company = restTemplate.getForObject("http://localhost:8081/api/public/company/1", Company.class);
-        System.out.println(company + "Company Detail");
+    public List<JobWithCompanyDTO> findAllJobs() {
         List<Job> jobs = jobRepository.findAll();
-        return jobs;
+        return jobs.stream().map(this::convertToDTO).collect(Collectors.toList());
+
+    }
+
+    private JobWithCompanyDTO convertToDTO(Job job){
+            RestTemplate restTemplate = new RestTemplate();
+            JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+            jobWithCompanyDTO.setJob(job);
+            Company company = restTemplate.getForObject("http://localhost:8081/api/public/company/" + job.getCompanyId(), Company.class);
+            jobWithCompanyDTO.setCompany(company);
+
+        return jobWithCompanyDTO;
     }
 
     @Override

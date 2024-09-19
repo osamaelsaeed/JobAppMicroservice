@@ -4,6 +4,7 @@ package com.job_ms.job_ms.job.jobServiceImpl;
 import com.job_ms.job_ms.job.Job;
 import com.job_ms.job_ms.job.JobRepository;
 import com.job_ms.job_ms.job.JobService;
+import com.job_ms.job_ms.job.external.Company;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,7 +27,7 @@ public class JobServiceImpl implements JobService {
     @Override
     public List<Job> findAllJobs() {
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getForObject("http://localhost:8081/api/public/company/1", Company.class, )
+        restTemplate.getForObject("http://localhost:8081/api/public/company/1", Company.class);
         List<Job> jobs = jobRepository.findAll();
         return jobs;
     }

@@ -1,0 +1,38 @@
+services:
+  postgres:
+    container_name: postgres_con
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: elsaeed
+      POSTGRES_PASSWORD: Om3571590#
+      PGDATA: /data/postgresDB
+    volumes:
+      - postgresDB_data:/var/lib/postgresql/data
+      - ./db-init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - '5433:5432'
+    networks:
+      - postgresNetwork
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-om35453@gmail.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-Om3571590#}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - '5050:80'
+    networks:
+      - postgresNetwork
+    restart: unless-stopped
+
+volumes:
+  postgresDB_data:
+  pgadmin:
+networks:
+  postgresNetwork:
+    driver: bridge

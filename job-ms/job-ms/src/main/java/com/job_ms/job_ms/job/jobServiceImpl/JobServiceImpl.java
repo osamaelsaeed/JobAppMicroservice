@@ -6,6 +6,7 @@ import com.job_ms.job_ms.job.JobRepository;
 import com.job_ms.job_ms.job.JobService;
 import com.job_ms.job_ms.job.dto.JobWithCompanyDTO;
 import com.job_ms.job_ms.job.external.Company;
+import com.job_ms.job_ms.job.mapper.JobMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +20,9 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
 
     @Override
@@ -35,21 +39,16 @@ public class JobServiceImpl implements JobService {
     }
 
     private JobWithCompanyDTO convertToDTO(Job job){
-            RestTemplate restTemplate = new RestTemplate();
-            JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
-            jobWithCompanyDTO.setJob(job);
-            Company company = restTemplate.getForObject("http://localhost:8081/api/public/company/" + job.getCompanyId(), Company.class);
-            jobWithCompanyDTO.setCompany(company);
-
+            Company company = restTemplate.getForObject("http://COMPANY-MS:8081/api/public/company/" + job.getCompanyId(), Company.class);
+            JobWithCompanyDTO jobWithCompanyDTO = JobMapper.mapToJobWithCompanyDto(job, company);
         return jobWithCompanyDTO;
     }
 
     @Override
-    public Job findJobById(Long id) {
-
+    public JobWithCompanyDTO findJobById(Long id) {
         Job job = jobRepository.findById(id).orElseThrow(() -> new RuntimeException("No job with this id found"));
-
-        return job;
+        JobWithCompanyDTO jobWithCompanyDTO = convertToDTO(job);
+        return jobWithCompanyDTO;
     }
 
     @Override

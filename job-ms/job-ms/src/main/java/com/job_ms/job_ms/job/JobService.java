@@ -9,7 +9,7 @@ public interface JobService {
 
     List<JobWithCompanyDTO> findAllJobs();
 
-    Job findJobById(Long id);
+    JobWithCompanyDTO findJobById(Long id);
 
     Job deleteJobById(Long id);
 

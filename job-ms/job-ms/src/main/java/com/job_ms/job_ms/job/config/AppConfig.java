@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+
+//we don't need this if we use openFeign instead of restTemplate
 @Configuration
 public class AppConfig {
 

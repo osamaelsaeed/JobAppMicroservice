@@ -1,16 +1,20 @@
 package com.job_ms.job_ms.job.mapper;
 
 import com.job_ms.job_ms.job.Job;
-import com.job_ms.job_ms.job.dto.JobWithCompanyDTO;
+import com.job_ms.job_ms.job.dto.JobDTO;
 import com.job_ms.job_ms.job.external.Company;
+import com.job_ms.job_ms.job.external.Review;
+
+import java.util.List;
 
 public class JobMapper {
 
-    public static JobWithCompanyDTO mapToJobWithCompanyDto(
+    public static JobDTO mapToJobWithCompanyDto(
             Job job,
-            Company company
+            Company company,
+            List<Review> reviews
     ){
-        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+        JobDTO jobWithCompanyDTO = new JobDTO();
         jobWithCompanyDTO.setJobId(job.getJobId());
         jobWithCompanyDTO.setTitle(job.getTitle());
         jobWithCompanyDTO.setDescription(job.getDescription());
@@ -18,6 +22,7 @@ public class JobMapper {
         jobWithCompanyDTO.setMinSalary(job.getMinSalary());
         jobWithCompanyDTO.setLocation(job.getLocation());
         jobWithCompanyDTO.setCompany(company);
+        jobWithCompanyDTO.setReviews(reviews);
 
         return jobWithCompanyDTO;
     }

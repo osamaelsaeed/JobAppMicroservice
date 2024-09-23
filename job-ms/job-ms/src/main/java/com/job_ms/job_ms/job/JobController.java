@@ -10,37 +10,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/jobs")
 public class JobController {
 
     @Autowired
     private JobService jobService;
 
-    @PostMapping("/admin/job")
+    @PostMapping
     public ResponseEntity<Job> createJob(@RequestBody Job job){
         Job savedJob = jobService.addJob(job);
         return new ResponseEntity<>(savedJob, HttpStatus.CREATED);
     }
 
-    @GetMapping("/public/job")
+    @GetMapping
     public ResponseEntity<List<JobDTO>> retrieveAllJobs(){
         List<JobDTO> savedJobs = jobService.findAllJobs();
         return new ResponseEntity<>(savedJobs, HttpStatus.OK);
     }
 
-    @GetMapping("/public/job/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<JobDTO> retrieveJobById(@PathVariable Long id){
         JobDTO job = jobService.findJobById(id);
         return new ResponseEntity<>(job, HttpStatus.OK);
     }
 
-    @DeleteMapping("/admin/job/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Job> DeleteJob(@PathVariable Long id){
         Job job = jobService.deleteJobById(id);
         return new ResponseEntity<>(job, HttpStatus.OK);
     }
 
-    @PutMapping("/admin/job/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Job> UpdateJob(@PathVariable Long id, @RequestBody Job job){
         Job updatedJob = jobService.updateJob(id, job);
         return new ResponseEntity<>(updatedJob, HttpStatus.OK);

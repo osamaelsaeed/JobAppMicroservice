@@ -1,5 +1,6 @@
 package com.review_ms.review_ms.review;
 
+import com.review_ms.review_ms.review.messaging.ReviewMessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,13 @@ public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private ReviewMessageProducer reviewMessageProducer;
 
     @PostMapping("/company/{companyId}")
     public ResponseEntity<Review> addReview(@RequestBody Review review, @PathVariable Long companyId){
         Review savedReview = reviewService.createReview(companyId, review);
+        reviewMessageProducer.sendMessage(savedReview);
         return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
     }
 
@@ -54,6 +58,12 @@ public class ReviewController {
     public ResponseEntity<Review> deleteReview( @PathVariable Long reviewId){
         Review deletedReview = reviewService.deleteReview(reviewId);
         return new ResponseEntity<>(deletedReview, HttpStatus.OK);
+    }
+
+    @GetMapping("/averageRating/{companyId}")
+    public Double getAverageRating(@PathVariable Long companyId){
+        Double averageRate = reviewService.getAverageRate(companyId);
+        return averageRate;
     }
 
 

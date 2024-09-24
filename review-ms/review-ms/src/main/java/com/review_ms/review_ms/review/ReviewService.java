@@ -16,4 +16,6 @@ public interface ReviewService {
     Review deleteReview(Long reviewId);
 
     Review getReview(Long reviewId);
+
+    Double getAverageRate(Long companyId);
 }

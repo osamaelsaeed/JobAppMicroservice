@@ -85,4 +85,10 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new RuntimeException("review not found with id" + reviewId));
         return reviewDB;
     }
+
+    @Override
+    public Double getAverageRate(Long companyId) {
+        List<Review> reviews = getAllReviewsForCompany(companyId);
+        return reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
+    }
 }

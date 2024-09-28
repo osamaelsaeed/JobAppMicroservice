@@ -1,6 +1,91 @@
 services:
+
+  config-server-ms:
+    image: osamaelsaeed/config-server:latest
+    container_name: config-server-ms
+    ports:
+      - 8080:8080
+    depends_on:
+      - service-registry
+    networks:
+      - microservicesNetwork
+      - postgresNetwork
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  gateway:
+    image: osamaelsaeed/gateway:latest
+    container_name: gateway
+    ports:
+      - 8084:8084
+    depends_on:
+      - service-registry
+    networks:
+      - microservicesNetwork
+      - postgresNetwork
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  service-registry:
+    image: osamaelsaeed/service-registry:latest
+    container_name: service-registry
+    ports:
+      - 8761:8761
+    depends_on:
+      - rabbitmq
+      - zipkin
+      - postgres
+      - pgadmin
+    networks:
+      - microservicesNetwork
+      - postgresNetwork
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  company-ms:
+    container_name: company-ms
+    image: osamaelsaeed/company-ms:latest
+    ports:
+      - 8081:8081
+    depends_on:
+      - service-registry
+      - config-server-ms
+    networks:
+      - microservicesNetwork
+      - postgresNetwork
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  job-ms:
+    container_name: job-ms
+    image: osamaelsaeed/job-ms:latest
+    ports:
+      - 8082:8082
+    depends_on:
+      - service-registry
+      - config-server-ms
+    networks:
+      - microservicesNetwork
+      - postgresNetwork
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  review-ms:
+    container_name: review-ms
+    image: osamaelsaeed/review-ms:latest
+    ports:
+      - 8083:8083
+    depends_on:
+      - service-registry
+      - config-server-ms
+    networks:
+      - microservicesNetwork
+      - postgresNetwork
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
   postgres:
-    container_name: postgres_con
+    container_name: postgres
     image: postgres:latest
     environment:
       POSTGRES_USER: elsaeed
@@ -16,7 +101,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin_container
+    container_name: pgadmin
     image: dpage/pgadmin4:latest
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-om35453@gmail.com}
@@ -52,4 +137,6 @@ volumes:
   pgadmin:
 networks:
   postgresNetwork:
+    driver: bridge
+  microservicesNetwork:
     driver: bridge
